@@ -23,3 +23,10 @@ La estructura inicial sigue los puntos 6.1 y 6.2 de la guia de trabajo:
 ```powershell
 mvn validate
 ```
+
+## CLI minima
+
+```powershell
+.\forgeia.ps1 init demo
+mvn -pl forgeia-core test
+```

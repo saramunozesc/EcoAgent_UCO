@@ -16,8 +16,8 @@ Thumbs.db
 ~$*
 
 # Local runtime data
-workspace/
-sandbox/
-logs/
+/workspace/
+/sandbox/
+/logs/
 *.log
 

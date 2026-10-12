@@ -23,3 +23,35 @@ EcoAgent_UCO/
 
 Los modulos Java se declaran desde el `pom.xml` raiz para poder ejecutar validaciones Maven de forma conjunta.
 
+## 6.3 Primeras tareas
+
+Estado actual:
+
+- Repositorio Git creado y enlazado con GitHub.
+- Modulos Maven declarados desde el `pom.xml` raiz.
+- Configuracion externa en `config/forgeia.properties`.
+- Sandbox de escritura configurado en `workspace/`.
+- Logging estructurado JSONL en `logs/`, con un `runId` por ejecucion.
+- Modelos de dominio basicos en `forgeia-core`.
+- CLI minima disponible con `forgeia init <nombre>` mediante el script `forgeia.ps1`.
+
+Ejemplo:
+
+```powershell
+.\forgeia.ps1 init demo
+```
+
+## 6.4 Criterio de salida
+
+La fase se considera cerrada cuando:
+
+- El comando `forgeia init <nombre>` crea un workspace vacio dentro del sandbox.
+- La ejecucion queda registrada en un fichero JSONL con `runId`.
+- Los tests de `forgeia-core` pasan sin usar IA.
+
+Verificacion:
+
+```powershell
+mvn -pl forgeia-core test
+```
+
