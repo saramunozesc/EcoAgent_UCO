@@ -30,3 +30,9 @@ mvn validate
 .\forgeia.ps1 init demo
 mvn -pl forgeia-core test
 ```
+
+## Fase 1
+
+```powershell
+mvn -pl forgeia-tools test
+```
