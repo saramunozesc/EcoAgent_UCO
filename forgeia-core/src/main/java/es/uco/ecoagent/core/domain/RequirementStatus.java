@@ -1,5 +1,8 @@
 package es.uco.ecoagent.core.domain;
 
+/**
+ * Enumerates the workflow states a requirement can move through.
+ */
 public enum RequirementStatus {
     DRAFT,
     APPROVED,

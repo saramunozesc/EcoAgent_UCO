@@ -9,7 +9,13 @@ import java.nio.file.Path;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+/**
+ * Verifies the init workflow without invoking any IA provider.
+ */
 public class ProjectInitializerTest {
+    /**
+     * Ensures init creates an empty workspace and records a structured run log.
+     */
     @Test
     public void initCreatesEmptyWorkspaceAndRunLogWithoutIa() throws Exception {
         Path tempRoot = Files.createTempDirectory("forgeia-test");

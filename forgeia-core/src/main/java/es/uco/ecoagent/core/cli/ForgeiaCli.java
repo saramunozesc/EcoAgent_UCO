@@ -4,10 +4,19 @@ import es.uco.ecoagent.core.config.ForgeiaConfig;
 import es.uco.ecoagent.core.workspace.InitResult;
 import es.uco.ecoagent.core.workspace.ProjectInitializer;
 
+/**
+ * Entry point for the minimal ForgeIA command line interface.
+ */
 public final class ForgeiaCli {
+    /**
+     * Prevents instantiation because the CLI only exposes static behavior.
+     */
     private ForgeiaCli() {
     }
 
+    /**
+     * Starts the CLI process and exits with a non-zero status on errors.
+     */
     public static void main(String[] args) {
         int exitCode = run(args);
         if (exitCode != 0) {
@@ -15,6 +24,9 @@ public final class ForgeiaCli {
         }
     }
 
+    /**
+     * Parses supported commands and executes the requested action.
+     */
     static int run(String[] args) {
         if (args.length != 2 || !"init".equals(args[0])) {
             System.err.println("Usage: forgeia init <nombre>");

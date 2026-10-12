@@ -10,9 +10,15 @@ import java.time.Instant;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * Writes structured JSONL events for each ForgeIA execution.
+ */
 public final class StructuredRunLogger {
     private final Path logFile;
 
+    /**
+     * Ensures the log directory exists and resolves the run log file.
+     */
     public StructuredRunLogger(Path logsRoot, String runId) {
         try {
             Files.createDirectories(logsRoot);
@@ -22,6 +28,9 @@ public final class StructuredRunLogger {
         this.logFile = logsRoot.resolve(runId + ".jsonl");
     }
 
+    /**
+     * Appends a structured event with timestamp, runId and custom fields.
+     */
     public void event(String runId, String eventType, Map<String, String> fields) {
         Map<String, String> event = new LinkedHashMap<String, String>();
         event.put("timestamp", Instant.now().toString());
@@ -41,10 +50,16 @@ public final class StructuredRunLogger {
         }
     }
 
+    /**
+     * Returns the path of the JSONL file receiving run events.
+     */
     public Path getLogFile() {
         return logFile;
     }
 
+    /**
+     * Serializes a simple string map to a compact JSON object.
+     */
     private static String toJson(Map<String, String> event) {
         StringBuilder builder = new StringBuilder();
         builder.append("{");
@@ -61,6 +76,9 @@ public final class StructuredRunLogger {
         return builder.toString();
     }
 
+    /**
+     * Escapes the characters needed for the logger's simple JSON output.
+     */
     private static String escape(String value) {
         return value.replace("\\", "\\\\").replace("\"", "\\\"");
     }

@@ -12,15 +12,24 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * Coordinates project initialization, sandbox creation and first run logging.
+ */
 public final class ProjectInitializer {
     private final ForgeiaConfig config;
     private final WorkspaceService workspaceService;
 
+    /**
+     * Creates an initializer from the external harness configuration.
+     */
     public ProjectInitializer(ForgeiaConfig config) {
         this.config = config;
         this.workspaceService = new WorkspaceService(config.getWorkspaceRoot());
     }
 
+    /**
+     * Initializes a project workspace and records the operation as a run event.
+     */
     public InitResult init(String projectName) {
         String runId = RunId.create();
         Path workspace = workspaceService.createProjectWorkspace(projectName);

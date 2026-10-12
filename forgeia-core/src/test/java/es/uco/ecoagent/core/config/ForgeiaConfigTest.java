@@ -7,7 +7,13 @@ import java.nio.file.Path;
 
 import static org.junit.Assert.assertEquals;
 
+/**
+ * Verifies that external ForgeIA configuration is parsed correctly.
+ */
 public class ForgeiaConfigTest {
+    /**
+     * Ensures custom properties override the default configuration values.
+     */
     @Test
     public void loadsExternalConfigValues() throws Exception {
         Path configFile = Files.createTempFile("forgeia", ".properties");

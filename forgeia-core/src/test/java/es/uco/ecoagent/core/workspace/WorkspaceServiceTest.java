@@ -8,7 +8,13 @@ import java.nio.file.Path;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+/**
+ * Verifies workspace creation stays inside the configured sandbox.
+ */
 public class WorkspaceServiceTest {
+    /**
+     * Ensures readable names are converted into safe workspace folders.
+     */
     @Test
     public void createsWorkspaceInsideSandboxWithSafeName() throws Exception {
         Path root = Files.createTempDirectory("forgeia-workspace");
@@ -21,6 +27,9 @@ public class WorkspaceServiceTest {
         assertTrue(Files.isDirectory(workspace));
     }
 
+    /**
+     * Ensures unsafe names are rejected before touching the filesystem.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void rejectsInvalidName() throws Exception {
         Path root = Files.createTempDirectory("forgeia-workspace");
