@@ -1,0 +1,26 @@
+# EcoAgent UCO
+
+Base inicial del TFG para construir un harness multiagente orientado a la generacion y evolucion de aplicaciones Java con LLMs.
+
+## Fase 0
+
+Esta fase prepara una base limpia, versionada y reproducible. No incluye uso de IA.
+
+La estructura inicial sigue los puntos 6.1 y 6.2 de la guia de trabajo:
+
+- `forgeia-core`: dominio y orquestacion.
+- `forgeia-llm`: adaptadores de modelos.
+- `forgeia-analysis`: AST, grafo e indice.
+- `forgeia-tools`: filesystem, Git, Maven y tests.
+- `forgeia-server`: API REST del harness.
+- `forgeia-ui`: interfaz opcional.
+- `forgeia-evaluation`: benchmarks y experimentos.
+- `docs`: documentacion del proyecto.
+- `examples`: ejemplos y fixtures.
+
+## Verificacion inicial
+
+```powershell
+mvn validate
+```
+

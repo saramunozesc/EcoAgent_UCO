@@ -1,0 +1,23 @@
+# Build outputs
+target/
+dist/
+build/
+node_modules/
+
+# IDE files
+.idea/
+.vscode/
+*.iml
+.graphify/
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+~$*
+
+# Local runtime data
+workspace/
+sandbox/
+logs/
+*.log
+
