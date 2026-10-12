@@ -1,6 +1,6 @@
 # EcoAgent UCO
 
-Base inicial del TFG para construir un harness multiagente orientado a la generacion y evolucion de aplicaciones Java con LLMs.
+Plataforma agentica capaz de generar aplicaciones Java completas a partir de requisitos en lenguaje natural, optimizando deliberadamente el consumo de tokens y contexto.
 
 ## Fase 0
 
@@ -23,4 +23,3 @@ La estructura inicial sigue los puntos 6.1 y 6.2 de la guia de trabajo:
 ```powershell
 mvn validate
 ```
-
