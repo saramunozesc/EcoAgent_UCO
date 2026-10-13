@@ -214,3 +214,41 @@ Verificacion:
 mvn -pl forgeia-analysis -am test
 ```
 
+# Fase 6 Multiagente
+
+## Agentes
+
+`AgentCatalog` registra los roles especializados:
+
+- `REQUIREMENTS`: produce `RequirementSpec`.
+- `ARCHITECT`: produce `ArchitectureDecision`.
+- `BACKEND`: produce `PatchProposal`.
+- `FRONTEND`: produce `PatchProposal`.
+- `TEST`: produce `TestPatch`.
+- `REVIEWER`: produce `ReviewReport`.
+- `REPAIR`: produce `RepairPatch`.
+
+## 12.1 Blackboard
+
+`Blackboard` almacena artefactos estructurados en `blackboard/`:
+
+- `requirements.json`
+- `architecture.json`
+- `decisions.json`
+- `api-contract.yaml`
+- `project-graph.json`
+- `task-status.json`
+- `metrics.jsonl`
+
+Los agentes comparten estos artefactos en lugar de mantener conversaciones largas.
+
+## 12.2 Orquestacion
+
+`MultiAgentOrchestrator` coordina el flujo con una maquina de estados explicita. Las transiciones se registran con `OrchestrationTransition` y apuntan al artefacto producido o consumido.
+
+Verificacion:
+
+```powershell
+mvn -pl forgeia-core -am test
+```
+
