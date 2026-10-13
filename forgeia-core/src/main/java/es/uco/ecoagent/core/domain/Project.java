@@ -10,6 +10,7 @@ public final class Project {
     private final String id;
     private final String name;
     private final Path workspace;
+    private final String stack;
     private final ProjectStatus status;
     private final Instant createdAt;
 
@@ -17,9 +18,17 @@ public final class Project {
      * Creates an immutable project snapshot for orchestration and auditing.
      */
     public Project(String id, String name, Path workspace, ProjectStatus status, Instant createdAt) {
+        this(id, name, workspace, "", status, createdAt);
+    }
+
+    /**
+     * Creates an immutable project snapshot with stack metadata.
+     */
+    public Project(String id, String name, Path workspace, String stack, ProjectStatus status, Instant createdAt) {
         this.id = id;
         this.name = name;
         this.workspace = workspace;
+        this.stack = stack;
         this.status = status;
         this.createdAt = createdAt;
     }
@@ -43,6 +52,13 @@ public final class Project {
      */
     public Path getWorkspace() {
         return workspace;
+    }
+
+    /**
+     * Returns the technology stack detected or selected for the project.
+     */
+    public String getStack() {
+        return stack;
     }
 
     /**

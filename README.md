@@ -85,3 +85,9 @@ java -cp forgeia-server/target/classes es.uco.ecoagent.server.ForgeiaWebServer 8
 ```powershell
 mvn -pl forgeia-evaluation -am test
 ```
+
+## Modelo de datos
+
+```powershell
+mvn -pl forgeia-core,forgeia-analysis -am test
+```

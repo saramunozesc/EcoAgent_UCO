@@ -12,15 +12,24 @@ public final class ContextSlice {
     private final List<ContextItem> items;
     private final int tokenCount;
     private final String strategy;
+    private final double score;
 
     /**
      * Creates an immutable context slice.
      */
     public ContextSlice(String taskId, List<ContextItem> items, int tokenCount, String strategy) {
+        this(taskId, items, tokenCount, strategy, averageScore(items));
+    }
+
+    /**
+     * Creates an immutable context slice with aggregate ranking score.
+     */
+    public ContextSlice(String taskId, List<ContextItem> items, int tokenCount, String strategy, double score) {
         this.taskId = taskId;
         this.items = Collections.unmodifiableList(new ArrayList<ContextItem>(items));
         this.tokenCount = tokenCount;
         this.strategy = strategy;
+        this.score = score;
     }
 
     /**
@@ -49,6 +58,27 @@ public final class ContextSlice {
      */
     public String getStrategy() {
         return strategy;
+    }
+
+    /**
+     * Returns the aggregate score of selected context items.
+     */
+    public double getScore() {
+        return score;
+    }
+
+    /**
+     * Calculates the average selected item score.
+     */
+    private static double averageScore(List<ContextItem> items) {
+        if (items.isEmpty()) {
+            return 0.0d;
+        }
+        double total = 0.0d;
+        for (ContextItem item : items) {
+            total += item.getScore();
+        }
+        return total / items.size();
     }
 }
 

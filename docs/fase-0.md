@@ -365,3 +365,36 @@ Verificacion:
 mvn -pl forgeia-evaluation -am test
 ```
 
+# Modelo de datos y artefactos internos
+
+## 16.1 Entidades principales
+
+El modelo interno queda repartido entre `forgeia-core` y `forgeia-analysis`:
+
+- `Project`: `id`, `name`, `workspace`, `stack`, `status`, `createdAt`.
+- `Requirement`: `id`, `title`, `description`, `acceptanceCriteria`, `priority`, `status`.
+- `Task`: `id`, `requirementId`, `type`, `status`, `dependencies`, `budget`.
+- `ContextSlice`: `taskId`, `items`, `tokenCount`, `strategy`, `score`.
+- `AgentRun`: `id`, `agentType`, `taskId`, `startedAt`, `result`.
+- `LlmUsage`: `provider`, `model`, `inputTokens`, `outputTokens`, `latencyMillis`, `estimatedCost`.
+- `Patch`: `taskId`, `diff`, `files`, `hash`, `applied`.
+- `ValidationRun`: `buildStatus`, `testsPassed`, `testsFailed`, `errors`, `durationMillis`.
+
+## 16.2 Estados de Requirement
+
+`RequirementStateMachine` controla el ciclo:
+
+```text
+DRAFT -> APPROVED -> PLANNED -> IN_PROGRESS -> VERIFYING -> DONE
+                                           |
+                                           +-> BLOCKED / NEEDS_REVIEW
+```
+
+Las transiciones quedan registradas como `RequirementTransition`.
+
+Verificacion:
+
+```powershell
+mvn -pl forgeia-core,forgeia-analysis -am test
+```
+
