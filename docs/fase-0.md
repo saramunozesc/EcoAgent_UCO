@@ -168,3 +168,49 @@ Verificacion:
 mvn -pl forgeia-core,forgeia-tools,forgeia-llm -am test
 ```
 
+# Fase 5 Context Compiler y ahorro de tokens
+
+## 11.1 Problema
+
+`ContextCompiler` transforma una tarea y un proyecto Java en un `ContextSlice` pequeno, evitando enviar el proyecto completo al agente.
+
+## 11.2 Indice AST de Java
+
+`JavaAstIndexer` construye resumenes por fichero sin LLM: paquete, tipo principal, interfaces, imports/dependencias, anotaciones y metodos. Es un indexador ligero para el MVP y puede reemplazarse por JavaParser cuando el entorno use Java 21.
+
+## 11.3 Grafo de dependencias
+
+`DependencyGraphBuilder` crea un grafo en memoria con nodos de fichero/simbolo y aristas `declares`, `uses` e `implements`.
+
+## 11.4 Seleccion inicial
+
+`ContextRanker` aplica la formula:
+
+```text
+score = 0.40 semanticSimilarity
+      + 0.25 dependencyProximity
+      + 0.20 requirementRelation
+      + 0.15 recentModification
+```
+
+## 11.5 Niveles
+
+El compilador selecciona contexto en niveles:
+
+- `L0_METADATA`
+- `L1_SUMMARY`
+- `L2_SNIPPET`
+- `L3_FULL_FILE`
+
+Si no cabe el fichero completo, baja a snippet, summary o metadata.
+
+## 11.6 Presupuesto
+
+El presupuesto se toma de `TaskBudget.maxContextTokens`. Los candidatos se ordenan por score y se incorporan hasta agotar presupuesto.
+
+Verificacion:
+
+```powershell
+mvn -pl forgeia-analysis -am test
+```
+
