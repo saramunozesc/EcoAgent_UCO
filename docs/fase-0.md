@@ -325,3 +325,43 @@ Verificacion:
 mvn -pl forgeia-server -am test
 ```
 
+# Fase 9 Metricas y evaluacion experimental
+
+## 15.1 Registro de metricas
+
+`MetricsRecorder` escribe metricas JSONL en `.forgeia/metrics.jsonl`.
+
+Metricas cubiertas:
+
+- `input_tokens` y `output_tokens` por llamada LLM.
+- `context_tokens` y `context_items_used` por tarea.
+- numero de llamadas por tarea, requisito y proyecto.
+- latencia y coste estimado por llamada.
+- `build_success`, `tests_passed`, `tests_failed`.
+- `repair_attempts`, `requirements_completed`.
+- criterios de aceptacion cumplidos y cambios no relacionados.
+
+`MetricsAggregator` resume los registros en `ProjectMetricsSummary` para calcular totales y ratio de build correcto.
+
+## 15.2 Experimento recomendado
+
+`ExperimentPlanner` crea un plan A/B/C para cada requisito:
+
+- `FULL_CONTEXT`: contexto amplio.
+- `BASIC_RETRIEVAL`: busqueda textual o semantica top-k.
+- `FORGEIA_CONTEXT_COMPILER`: AST, dependencias, relevancia y presupuesto.
+
+## 15.3 Metricas de calidad
+
+La evaluacion puede comparar build correcto, tests superados, criterios cumplidos, reparaciones, cambios no relacionados, tokens, latencia y coste estimado.
+
+## 15.4 Dataset benchmark
+
+`BenchmarkDatasetFactory` genera un dataset inicial controlado con 5 aplicaciones y 10 requisitos, cada uno con criterios de aceptacion automatizables.
+
+Verificacion:
+
+```powershell
+mvn -pl forgeia-evaluation -am test
+```
+

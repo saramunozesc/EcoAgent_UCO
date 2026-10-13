@@ -14,5 +14,23 @@
     <packaging>jar</packaging>
 
     <name>ForgeIA Evaluation</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>es.uco.ecoagent</groupId>
+            <artifactId>forgeia-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>es.uco.ecoagent</groupId>
+            <artifactId>forgeia-analysis</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 </project>
 
