@@ -91,3 +91,9 @@ mvn -pl forgeia-evaluation -am test
 ```powershell
 mvn -pl forgeia-core,forgeia-analysis -am test
 ```
+
+## Estructura del repositorio
+
+```powershell
+mvn test
+```

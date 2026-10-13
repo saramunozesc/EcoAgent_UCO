@@ -13,11 +13,15 @@
     <description>Harness multiagente para generacion eficiente de aplicaciones Java con LLMs.</description>
 
     <modules>
+        <module>forgeia-domain</module>
         <module>forgeia-core</module>
+        <module>forgeia-orchestrator</module>
         <module>forgeia-llm</module>
         <module>forgeia-analysis</module>
         <module>forgeia-tools</module>
+        <module>forgeia-agents</module>
         <module>forgeia-server</module>
+        <module>forgeia-ui</module>
         <module>forgeia-evaluation</module>
     </modules>
 

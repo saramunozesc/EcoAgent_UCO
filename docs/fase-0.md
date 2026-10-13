@@ -398,3 +398,44 @@ Verificacion:
 mvn -pl forgeia-core,forgeia-analysis -am test
 ```
 
+# Estructura recomendada del repositorio
+
+El reactor Maven queda preparado con estos modulos:
+
+```text
+forgeia/
+├── pom.xml
+├── forgeia-domain/
+├── forgeia-core/
+├── forgeia-orchestrator/
+├── forgeia-llm/
+├── forgeia-analysis/
+├── forgeia-tools/
+├── forgeia-agents/
+├── forgeia-server/
+├── forgeia-ui/
+├── forgeia-evaluation/
+└── docs/
+```
+
+## 17.1 Dependencias entre modulos
+
+Reglas actuales:
+
+- `forgeia-domain` contiene las entidades principales y no depende de SDKs, herramientas ni LLMs.
+- `forgeia-core` depende de `forgeia-domain` para configuracion, workspace, logging, blackboard y contratos centrales.
+- `forgeia-tools` depende de `forgeia-core`; encapsula Git, Maven, filesystem y patch.
+- `forgeia-llm` depende de interfaces y modelos internos, pero no obliga al resto del sistema a conocer una SDK concreta.
+- `forgeia-analysis` usa `core` y `tools` para importacion, AST, grafo, busqueda y contexto.
+- `forgeia-orchestrator`, `forgeia-agents` y `forgeia-ui` quedan como modulos frontera para extraer responsabilidades desde `core`, `llm` y `server` sin ciclos.
+
+Compatibilidad:
+
+El paquete Java `es.uco.ecoagent.core.domain` se conserva aunque viva en `forgeia-domain`, para evitar reescrituras masivas y mantener estable el codigo ya implementado.
+
+Verificacion:
+
+```powershell
+mvn test
+```
+
