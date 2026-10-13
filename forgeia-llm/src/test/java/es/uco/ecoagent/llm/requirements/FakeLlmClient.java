@@ -1,0 +1,40 @@
+package es.uco.ecoagent.llm.requirements;
+
+import es.uco.ecoagent.llm.api.LlmClient;
+import es.uco.ecoagent.llm.api.LlmRequest;
+import es.uco.ecoagent.llm.api.LlmResponse;
+
+import java.util.ArrayDeque;
+import java.util.Queue;
+
+/**
+ * Test double that returns queued LLM responses deterministically.
+ */
+final class FakeLlmClient implements LlmClient {
+    private final Queue<LlmResponse> responses = new ArrayDeque<LlmResponse>();
+    private int calls;
+
+    /**
+     * Adds a response that will be returned by the next complete call.
+     */
+    FakeLlmClient add(String content, int inputTokens, int outputTokens) {
+        responses.add(new LlmResponse("fake", "fake-requirements", content, inputTokens, outputTokens, 10L));
+        return this;
+    }
+
+    /**
+     * Returns the next queued response and records the call count.
+     */
+    public LlmResponse complete(LlmRequest request) {
+        calls++;
+        return responses.remove();
+    }
+
+    /**
+     * Returns how many times the fake client was called.
+     */
+    int getCalls() {
+        return calls;
+    }
+}
+

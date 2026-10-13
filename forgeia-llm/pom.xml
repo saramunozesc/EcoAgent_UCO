@@ -14,5 +14,18 @@
     <packaging>jar</packaging>
 
     <name>ForgeIA LLM</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>es.uco.ecoagent</groupId>
+            <artifactId>forgeia-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 </project>
 

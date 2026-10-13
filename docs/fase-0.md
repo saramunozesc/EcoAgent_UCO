@@ -94,3 +94,29 @@ Verificacion:
 mvn -pl forgeia-tools test
 ```
 
+# Fase 2 Primer LLM y generacion de requisitos
+
+## 8.1 Interfaz de modelo
+
+`forgeia-llm` define la interfaz `LlmClient` con DTOs `LlmRequest` y `LlmResponse`. El resto del sistema consume esa abstraccion y no conoce SDKs concretas de proveedores.
+
+## 8.2 Requirements Agent
+
+`RequirementsAgent` convierte una idea en una especificacion JSON validada. En esta fase no genera codigo.
+
+## 8.3 Validacion
+
+- Valida que el JSON tenga `projectName`, `actors` y `requirements`.
+- Normaliza prioridades a `MUST`, `SHOULD` o `COULD`.
+- Ignora IDs propuestos por el LLM y asigna `REQ-001`, `REQ-002`, etc.
+- Reintenta una vez si la primera respuesta no es parseable.
+- Persiste `requirements.json` y `requirements-trace.jsonl` con prompt, modelo, tokens y respuesta.
+
+## 8.4 Criterio de salida
+
+Verificacion:
+
+```powershell
+mvn -pl forgeia-llm -am test
+```
+
