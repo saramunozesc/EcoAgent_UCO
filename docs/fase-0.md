@@ -286,3 +286,42 @@ Verificacion:
 mvn -pl forgeia-analysis -am test
 ```
 
+# Fase 8 Interfaz visual
+
+## 14.1 Pantallas minimas
+
+La interfaz vive en `forgeia-server/src/main/resources/static` y se sirve con `ForgeiaWebServer`.
+
+Pantallas incluidas:
+
+- Dashboard de proyectos.
+- Crear proyecto desde una idea.
+- Lista de requisitos con estados.
+- Detalle de requisito con plan, agentes, contexto, tokens y resultados.
+- Vista de diff antes/despues.
+- Build/tests.
+- Metricas de consumo y presupuesto.
+- Nuevo requisito sobre proyecto existente con impacto previo.
+
+## 14.2 Pantalla de defensa
+
+La pantalla `Detalle REQ` muestra el caso `REQ-014 Sistema de logros` con:
+
+- Task actual `TASK-014-3 Implementar AchievementService`.
+- Agente activo `BackendAgent`.
+- Context Slice `4,120 / 8,000 tokens`.
+- Build `PASS`, tests `18/18`, reparaciones `0`.
+- Tokens totales de proyecto `63,842` frente a presupuesto `180,000`.
+
+Ejecucion local:
+
+```powershell
+java -cp forgeia-server/target/classes es.uco.ecoagent.server.ForgeiaWebServer 8080
+```
+
+Verificacion:
+
+```powershell
+mvn -pl forgeia-server -am test
+```
+

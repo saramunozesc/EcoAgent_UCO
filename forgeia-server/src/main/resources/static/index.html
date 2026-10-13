@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ForgeIA Console</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="brand">
+      <span class="brand-mark">F</span>
+      <div>
+        <strong>ForgeIA</strong>
+        <small>Harness multiagente</small>
+      </div>
+    </div>
+    <nav class="nav" aria-label="Pantallas">
+      <button class="nav-item active" data-screen="dashboard">Dashboard</button>
+      <button class="nav-item" data-screen="create">Crear idea</button>
+      <button class="nav-item" data-screen="requirements">Requisitos</button>
+      <button class="nav-item" data-screen="requirement-detail">Detalle REQ</button>
+      <button class="nav-item" data-screen="diff">Diff</button>
+      <button class="nav-item" data-screen="build">Build/tests</button>
+      <button class="nav-item" data-screen="metrics">Metricas</button>
+      <button class="nav-item" data-screen="existing">Nuevo requisito</button>
+    </nav>
+  </aside>
+
+  <main class="shell">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Workspace autorizado</p>
+        <h1>EcoAgent_UCO</h1>
+      </div>
+      <div class="run-chip">
+        <span>runId</span>
+        <strong>RUN-20261013-0812</strong>
+      </div>
+    </header>
+
+    <section id="dashboard" class="screen active">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Dashboard de proyectos</p>
+          <h2>Proyectos activos</h2>
+        </div>
+        <button class="primary" data-screen-link="create">Nueva idea</button>
+      </div>
+      <div class="project-grid">
+        <article class="project-card selected">
+          <div class="project-visual">
+            <div class="pipeline-dot done"></div>
+            <div class="pipeline-line"></div>
+            <div class="pipeline-dot active"></div>
+            <div class="pipeline-line muted"></div>
+            <div class="pipeline-dot"></div>
+          </div>
+          <h3>MathKids</h3>
+          <p>Spring Boot · 14 requisitos · Fase 8</p>
+          <dl>
+            <div><dt>Build</dt><dd>PASS</dd></div>
+            <div><dt>Tests</dt><dd>18/18</dd></div>
+            <div><dt>Tokens</dt><dd>63,842</dd></div>
+          </dl>
+        </article>
+        <article class="project-card">
+          <div class="project-visual compact"></div>
+          <h3>EcoAgent_UCO</h3>
+          <p>Harness Maven · ramas snapshot · trazabilidad JSONL</p>
+          <dl>
+            <div><dt>Build</dt><dd>PASS</dd></div>
+            <div><dt>Tests</dt><dd>33/33</dd></div>
+            <div><dt>Tokens</dt><dd>0 IA</dd></div>
+          </dl>
+        </article>
+      </div>
+    </section>
+
+    <section id="create" class="screen">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Crear proyecto desde una idea</p>
+          <h2>Idea inicial</h2>
+        </div>
+        <button class="primary">Generar requisitos</button>
+      </div>
+      <div class="split">
+        <label class="input-block">
+          <span>Descripcion</span>
+          <textarea>Aplicacion educativa para que ninos practiquen matematicas con puntos, niveles y logros.</textarea>
+        </label>
+        <div class="panel">
+          <h3>Salida esperada</h3>
+          <pre>{
+  "projectName": "MathKids",
+  "requirements": [
+    { "id": "REQ-014", "title": "Sistema de logros" }
+  ]
+}</pre>
+        </div>
+      </div>
+    </section>
+
+    <section id="requirements" class="screen">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Lista de requisitos</p>
+          <h2>Backlog trazable</h2>
+        </div>
+        <button class="secondary" data-screen-link="existing">Anadir requisito</button>
+      </div>
+      <table class="data-table">
+        <thead><tr><th>ID</th><th>Titulo</th><th>Prioridad</th><th>Estado</th><th>Agente</th></tr></thead>
+        <tbody>
+          <tr data-screen-link="requirement-detail"><td>REQ-012</td><td>Registro de usuario</td><td>MUST</td><td><span class="status done">DONE</span></td><td>Backend</td></tr>
+          <tr data-screen-link="requirement-detail"><td>REQ-013</td><td>Progreso por nivel</td><td>MUST</td><td><span class="status done">DONE</span></td><td>Test</td></tr>
+          <tr data-screen-link="requirement-detail"><td>REQ-014</td><td>Sistema de logros</td><td>SHOULD</td><td><span class="status progress">IN PROGRESS</span></td><td>Backend</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="requirement-detail" class="screen defense">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Pantalla clave para la defensa</p>
+          <h2>REQ-014 Sistema de logros <span class="status progress">IN PROGRESS</span></h2>
+        </div>
+        <button class="primary" data-screen-link="diff">Ver diff</button>
+      </div>
+      <div class="defense-layout">
+        <section class="panel">
+          <h3>Plan actual</h3>
+          <p><strong>Task actual:</strong> TASK-014-3 Implementar AchievementService</p>
+          <p><strong>Agent:</strong> BackendAgent</p>
+          <ol class="task-list">
+            <li class="done">TASK-014-1 Crear entidad Achievement</li>
+            <li class="done">TASK-014-2 Crear repositorio</li>
+            <li class="active">TASK-014-3 Implementar AchievementService</li>
+            <li>TASK-014-4 Crear endpoint REST</li>
+            <li>TASK-014-5 Crear tests</li>
+          </ol>
+        </section>
+        <section class="panel context-panel">
+          <h3>Context Slice <span>4,120 / 8,000 tokens</span></h3>
+          <div class="token-bar"><span style="width: 51.5%"></span></div>
+          <ul class="context-list">
+            <li><span>Achievement.java</span><strong>520</strong></li>
+            <li><span>GameService#finishGame</span><strong>910</strong></li>
+            <li><span>User.java</span><strong>380</strong></li>
+            <li><span>architecture summary</span><strong>640</strong></li>
+            <li><span>relevant decisions</span><strong>270</strong></li>
+            <li><span>prompt/instructions</span><strong>1,400</strong></li>
+          </ul>
+        </section>
+        <section class="panel checks">
+          <h3>Validacion</h3>
+          <div class="check-row"><span>Build</span><strong class="pass">PASS</strong></div>
+          <div class="check-row"><span>Tests</span><strong>18/18</strong></div>
+          <div class="check-row"><span>Repair attempts</span><strong>0</strong></div>
+          <div class="check-row"><span>Tokens project total</span><strong>63,842</strong></div>
+          <div class="check-row"><span>Budget</span><strong>180,000</strong></div>
+        </section>
+      </div>
+    </section>
+
+    <section id="diff" class="screen">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Vista diff antes/despues</p>
+          <h2>Patch propuesto por BackendAgent</h2>
+        </div>
+        <button class="primary">Aprobar patch</button>
+      </div>
+      <pre class="diff-view"><span class="minus">- public void finishGame(User user) {</span>
+<span class="minus">-     scoreService.save(user);</span>
+<span class="plus">+ public AchievementResult finishGame(User user) {</span>
+<span class="plus">+     Score score = scoreService.save(user);</span>
+<span class="plus">+     return achievementService.evaluate(user, score);</span>
+  }</pre>
+    </section>
+
+    <section id="build" class="screen">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Build y tests</p>
+          <h2>Verificacion determinista</h2>
+        </div>
+        <button class="secondary">Reejecutar mvn test</button>
+      </div>
+      <div class="build-grid">
+        <div class="metric-tile"><span>Build</span><strong>PASS</strong></div>
+        <div class="metric-tile"><span>Tests</span><strong>18/18</strong></div>
+        <div class="metric-tile"><span>Tiempo</span><strong>11.2s</strong></div>
+        <div class="metric-tile"><span>Errores normalizados</span><strong>0</strong></div>
+      </div>
+    </section>
+
+    <section id="metrics" class="screen">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Metricas de consumo</p>
+          <h2>Comparacion con presupuesto</h2>
+        </div>
+      </div>
+      <div class="budget">
+        <div><span>Contexto</span><div class="bar"><i style="width: 51.5%"></i></div><strong>4,120 / 8,000</strong></div>
+        <div><span>Salida</span><div class="bar"><i style="width: 38%"></i></div><strong>950 / 2,500</strong></div>
+        <div><span>Llamadas LLM</span><div class="bar"><i style="width: 50%"></i></div><strong>2 / 4</strong></div>
+        <div><span>Proyecto</span><div class="bar"><i style="width: 35.5%"></i></div><strong>63,842 / 180,000</strong></div>
+      </div>
+    </section>
+
+    <section id="existing" class="screen">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Proyecto existente</p>
+          <h2>Anadir nuevo requisito</h2>
+        </div>
+        <button class="primary">Analizar impacto</button>
+      </div>
+      <div class="split">
+        <label class="input-block">
+          <span>Mejora solicitada</span>
+          <textarea>Anadir logros cuando el usuario complete cinco partidas perfectas.</textarea>
+        </label>
+        <div class="panel">
+          <h3>Componentes afectados</h3>
+          <ul class="context-list">
+            <li><span>AchievementService</span><strong>0.91</strong></li>
+            <li><span>GameService#finishGame</span><strong>0.74</strong></li>
+            <li><span>User.java</span><strong>0.42</strong></li>
+          </ul>
+          <button class="secondary">Aprobar plan</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

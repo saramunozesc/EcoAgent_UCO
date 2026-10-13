@@ -72,3 +72,10 @@ mvn -pl forgeia-core -am test
 ```powershell
 mvn -pl forgeia-analysis -am test
 ```
+
+## Fase 8
+
+```powershell
+mvn -pl forgeia-server -am test
+java -cp forgeia-server/target/classes es.uco.ecoagent.server.ForgeiaWebServer 8080
+```
