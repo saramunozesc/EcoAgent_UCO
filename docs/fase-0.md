@@ -252,3 +252,37 @@ Verificacion:
 mvn -pl forgeia-core -am test
 ```
 
+# Fase 7 Proyecto existente y evolucion
+
+## 13.1 Importacion
+
+`ExistingProjectImporter` valida que el directorio contiene `pom.xml`, crea una rama snapshot `forgeia/import-...`, escanea ficheros, construye indice Java, grafo de dependencias y ejecuta `mvn -q test` antes de tocar codigo.
+
+El resumen persistente se guarda en:
+
+```text
+.forgeia/project-summary.json
+```
+
+Incluye modulos Maven detectados, endpoints, entidades, dependencias y resultado del build base.
+
+## 13.2 Nuevo requisito
+
+`ImpactAnalyzer` recibe un `ProjectSummary` y el texto del nuevo requisito. Devuelve un `ImpactAnalysis` con componentes afectados y `requiresApproval=true`, de forma que ForgeIA pueda mostrar el impacto antes de aplicar parches.
+
+## 13.3 Trazabilidad
+
+`TraceStore` escribe enlaces JSONL entre artefactos:
+
+- `Requirement` -> `Task`, `Commit`, `Diff`, `TestResult`.
+- `Task` -> `ContextSlice`, `LlmUsage`, `File`.
+- `Patch` -> agente, modelo y validacion.
+- `TestResult` -> requisito y build.
+- `LlmUsage` -> task, run y modelo.
+
+Verificacion:
+
+```powershell
+mvn -pl forgeia-analysis -am test
+```
+

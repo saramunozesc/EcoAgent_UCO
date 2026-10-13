@@ -66,3 +66,9 @@ mvn -pl forgeia-analysis -am test
 ```powershell
 mvn -pl forgeia-core -am test
 ```
+
+## Fase 7
+
+```powershell
+mvn -pl forgeia-analysis -am test
+```
