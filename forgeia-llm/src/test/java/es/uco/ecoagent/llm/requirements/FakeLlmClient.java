@@ -10,14 +10,14 @@ import java.util.Queue;
 /**
  * Test double that returns queued LLM responses deterministically.
  */
-final class FakeLlmClient implements LlmClient {
+public final class FakeLlmClient implements LlmClient {
     private final Queue<LlmResponse> responses = new ArrayDeque<LlmResponse>();
     private int calls;
 
     /**
      * Adds a response that will be returned by the next complete call.
      */
-    FakeLlmClient add(String content, int inputTokens, int outputTokens) {
+    public FakeLlmClient add(String content, int inputTokens, int outputTokens) {
         responses.add(new LlmResponse("fake", "fake-requirements", content, inputTokens, outputTokens, 10L));
         return this;
     }
@@ -33,7 +33,7 @@ final class FakeLlmClient implements LlmClient {
     /**
      * Returns how many times the fake client was called.
      */
-    int getCalls() {
+    public int getCalls() {
         return calls;
     }
 }

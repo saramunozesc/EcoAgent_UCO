@@ -120,3 +120,31 @@ Verificacion:
 mvn -pl forgeia-llm -am test
 ```
 
+# Fase 3 Ejecutor de requisitos
+
+## 9.1 Planner
+
+`RequirementPlanner` divide un requisito aprobado en tareas pequenas y validables: entidad, repositorio, servicio, endpoint y tests. Cada tarea incluye ID determinista, dependencias y archivos objetivo probables.
+
+## 9.2 Maquina de estados
+
+`TaskStateMachine` aplica el flujo:
+
+```text
+PENDING -> PLANNED -> READY -> RUNNING -> VERIFYING -> DONE
+                                     |             |
+                                     +-> FAILED <--+
+```
+
+Cada transicion produce un `TaskTransition` auditable con estado anterior, estado nuevo, motivo y fecha.
+
+## 9.3 Primer Code Agent
+
+`CodeAgent` recibe una `PlannedTask`, instrucciones de arquitectura y contexto minimo. Su salida es un `PatchProposal` estructurado; no escribe archivos ni aplica cambios.
+
+Verificacion:
+
+```powershell
+mvn -pl forgeia-core,forgeia-llm -am test
+```
+
