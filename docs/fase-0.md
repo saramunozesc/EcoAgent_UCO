@@ -439,3 +439,46 @@ Verificacion:
 mvn test
 ```
 
+# APIs y contratos internos
+
+## 18.1 Contrato de agente
+
+`Agent<I, O>` vive en `forgeia-agents`:
+
+```java
+interface Agent<I, O> {
+    O execute(AgentContext context, I input);
+}
+```
+
+`AgentContext` contiene `projectId`, `taskId`, `tokenBudget`, `toolPermissions`, `contextSlice` y `traceId`.
+
+## 18.2 Contrato de herramienta
+
+`Tool<I, O>` ya se mantiene en `forgeia-tools`:
+
+```java
+interface Tool<I, O> {
+    String name();
+    O execute(ToolExecutionContext ctx, I input);
+}
+```
+
+`AuditedTool` envuelve cualquier herramienta para registrar:
+
+- entrada sanitizada.
+- duracion.
+- resultado.
+- errores.
+- archivos afectados.
+
+## 18.3 Salidas estructuradas
+
+`StructuredOutputValidator<T>` permite validar DTOs o salidas con esquema antes de aplicar efectos en el workspace. Si la validacion devuelve `ValidationOutcome.invalid(...)`, el executor debe rechazar la propuesta.
+
+Verificacion:
+
+```powershell
+mvn -pl forgeia-tools,forgeia-agents -am test
+```
+

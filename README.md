@@ -97,3 +97,9 @@ mvn -pl forgeia-core,forgeia-analysis -am test
 ```powershell
 mvn test
 ```
+
+## APIs internas
+
+```powershell
+mvn -pl forgeia-tools,forgeia-agents -am test
+```
