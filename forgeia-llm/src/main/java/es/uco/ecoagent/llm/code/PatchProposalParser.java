@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Parses the small JSON shape expected from the first code agent.
  */
-final class PatchProposalParser {
+public final class PatchProposalParser {
     /**
      * Prevents instantiation because parsing is static.
      */
@@ -18,7 +18,7 @@ final class PatchProposalParser {
     /**
      * Parses a patch proposal JSON response.
      */
-    static PatchProposal parse(String json) {
+    public static PatchProposal parse(String json) {
         String taskId = requiredString(json, "taskId");
         String summary = requiredString(json, "summary");
         String unifiedDiff = requiredString(json, "unifiedDiff");

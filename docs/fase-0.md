@@ -148,3 +148,23 @@ Verificacion:
 mvn -pl forgeia-core,forgeia-llm -am test
 ```
 
+# Fase 4 Build tests y reparacion
+
+## 10.1 Verificacion determinista
+
+`PatchVerifier` aplica un patch con `git apply` y ejecuta `mvn test` mediante las herramientas deterministas. El resultado queda en `DONE` solo cuando Maven devuelve exit code 0; si falla, queda en `FAILED`.
+
+## 10.2 Normalizador de errores
+
+`ErrorNormalizer` compacta la salida de Maven en `NormalizedError`, extrayendo tipo, fichero, linea, mensaje, simbolo relacionado y test afectado cuando se puede inferir.
+
+## 10.3 Reparacion limitada
+
+`RepairPolicy` limita los intentos de reparacion. `RepairAgent` recibe solo el diff previo y los errores normalizados, y devuelve un `PatchProposal`; no aplica cambios ni ejecuta comandos. Si se agotan intentos, la maquina de estados puede pasar a `NEEDS_REVIEW`.
+
+Verificacion:
+
+```powershell
+mvn -pl forgeia-core,forgeia-tools,forgeia-llm -am test
+```
+

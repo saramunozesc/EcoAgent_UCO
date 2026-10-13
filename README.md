@@ -48,3 +48,9 @@ mvn -pl forgeia-llm -am test
 ```powershell
 mvn -pl forgeia-core,forgeia-llm -am test
 ```
+
+## Fase 4
+
+```powershell
+mvn -pl forgeia-core,forgeia-tools,forgeia-llm -am test
+```

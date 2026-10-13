@@ -35,5 +35,18 @@ public class TaskStateMachineTest {
         TaskStateMachine machine = new TaskStateMachine("TASK-004-1", TaskStatus.PENDING);
         machine.transitionTo(TaskStatus.RUNNING, "skip planning");
     }
+
+    /**
+     * Ensures unresolved failures can be parked for human review.
+     */
+    @Test
+    public void canMoveFailedTaskToNeedsReview() {
+        TaskStateMachine machine = new TaskStateMachine("TASK-004-1", TaskStatus.FAILED);
+
+        machine.transitionTo(TaskStatus.NEEDS_REVIEW, "repair attempts exhausted");
+
+        assertEquals(TaskStatus.NEEDS_REVIEW, machine.getStatus());
+        assertEquals(1, machine.getHistory().size());
+    }
 }
 

@@ -64,8 +64,9 @@ public final class TaskStateMachine {
         transitions.put(TaskStatus.READY, Collections.singletonList(TaskStatus.RUNNING));
         transitions.put(TaskStatus.RUNNING, asList(TaskStatus.VERIFYING, TaskStatus.FAILED));
         transitions.put(TaskStatus.VERIFYING, asList(TaskStatus.DONE, TaskStatus.FAILED));
-        transitions.put(TaskStatus.FAILED, Collections.singletonList(TaskStatus.RUNNING));
+        transitions.put(TaskStatus.FAILED, asList(TaskStatus.RUNNING, TaskStatus.NEEDS_REVIEW));
         transitions.put(TaskStatus.DONE, Collections.<TaskStatus>emptyList());
+        transitions.put(TaskStatus.NEEDS_REVIEW, Collections.<TaskStatus>emptyList());
         return transitions;
     }
 

@@ -10,6 +10,7 @@ public enum TaskStatus {
     RUNNING,
     VERIFYING,
     DONE,
-    FAILED
+    FAILED,
+    NEEDS_REVIEW
 }
 
