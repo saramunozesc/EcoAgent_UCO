@@ -23,7 +23,7 @@ la evidencia disponible actualmente en el repositorio.
 | 11-13 | AST Java, grafo, Context Compiler y presupuestos | MVP-4 | Completado | Indice de simbolos, dependencias, ranking y degradacion de contexto bajo budget. `ContextCompilerTest` debe verificar seleccion, limite, unicidad y determinismo. |
 | 14-15 | Separacion multiagente y blackboard | MVP-5 | Completado | Catalogo de agentes, contratos compartidos, orquestacion y artefactos persistidos en blackboard con transiciones probadas. |
 | 16 | Importar y evolucionar un proyecto existente | modo evolucion | Completado | `ExistingProjectImporter` crea un snapshot, obtiene inventario, grafo, build base y resumen; `ImpactAnalyzer` identifica componentes afectados antes de aprobar un cambio. Sus pruebas deben pasar. |
-| 17 | UI y visualizacion de tokens y diffs | demo usable | En curso | Existe una consola web navegable y servidor local. Falta conectar sus acciones y datos de ejemplo con ejecuciones reales del harness. |
+| 17 | UI y visualizacion de tokens y diffs | demo usable | En curso | La consola comprueba la salud real del servidor y existe una frontera `POST /api/runs`. `ForgeiaRunService` ya produce contexto, diff y metricas por `runId`; falta configurar un proveedor y enlazar el formulario con el handler de ejecucion. |
 | 18-19 | Benchmarks A/B/C y analisis | resultados TFG | En curso | Existen dataset, planificador, metricas y matriz para `FULL_CONTEXT`, `BASIC_RETRIEVAL` y `FORGEIA_CONTEXT_COMPILER`. Falta ejecutar un lote reproducible y publicar resultados agregados reales. |
 | 20 | Pulido, documentacion y demo reproducible | version final | Pendiente | Requiere guia de instalacion limpia, guion de demo ejecutado, resultados de benchmark, evidencias y paquete final etiquetado. |
 
@@ -43,8 +43,9 @@ registro de metricas.
 
 ## Trabajo pendiente priorizado
 
-1. Conectar la consola web con casos de uso reales: crear idea, aprobar
-   requisitos, ejecutar una tarea y consultar contexto, diff, build y tokens.
+1. Configurar un adaptador real de `LlmClient` y conectarlo al handler
+   `POST /api/runs`; despues enlazar el formulario para ejecutar una tarea y
+   consultar contexto, diff, build y tokens.
 2. Incorporar un ejecutor de benchmark que materialice cada corrida A/B/C y
    exporte configuracion, resultado, tokens, latencia y estado de tests a JSON
    o CSV.

@@ -3,6 +3,9 @@ package es.uco.ecoagent.server;
 import org.junit.Test;
 
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 import static org.junit.Assert.assertNotNull;
@@ -37,6 +40,25 @@ public final class ForgeiaWebServerTest {
     public void packagesUiAssets() throws Exception {
         assertTrue(read("/static/styles.css").contains(".defense-layout"));
         assertTrue(read("/static/app.js").contains("showScreen"));
+        assertTrue(read("/static/app.js").contains("/api/health"));
+    }
+
+    @Test
+    public void exposesHealthAndDelegatesRunRequests() throws Exception {
+        ForgeiaWebServer server = new ForgeiaWebServer(0,
+                body -> "{\"accepted\":true,\"length\":" + body.length() + "}");
+        server.start();
+        try {
+            HttpResult health = request(server.getPort(), "GET", "/api/health", null);
+            assertTrue(health.status == 200);
+            assertTrue(health.body.contains("\"status\":\"UP\""));
+
+            HttpResult run = request(server.getPort(), "POST", "/api/runs", "{\"idea\":\"demo\"}");
+            assertTrue(run.status == 200);
+            assertTrue(run.body.contains("\"accepted\":true"));
+        } finally {
+            server.stop();
+        }
     }
 
     /**
@@ -49,5 +71,37 @@ public final class ForgeiaWebServerTest {
         int read = input.read(data);
         input.close();
         return new String(data, 0, read, StandardCharsets.UTF_8);
+    }
+
+    private static HttpResult request(int port, String method, String path, String body) throws Exception {
+        HttpURLConnection connection = (HttpURLConnection) new URL(
+                "http://127.0.0.1:" + port + path).openConnection();
+        connection.setRequestMethod(method);
+        connection.setConnectTimeout(3000);
+        connection.setReadTimeout(3000);
+        if (body != null) {
+            connection.setDoOutput(true);
+            connection.setRequestProperty("Content-Type", "application/json; charset=utf-8");
+            try (OutputStream output = connection.getOutputStream()) {
+                output.write(body.getBytes(StandardCharsets.UTF_8));
+            }
+        }
+        int status = connection.getResponseCode();
+        InputStream input = status >= 400 ? connection.getErrorStream() : connection.getInputStream();
+        byte[] data = new byte[input.available()];
+        int length = input.read(data);
+        input.close();
+        connection.disconnect();
+        return new HttpResult(status, new String(data, 0, length, StandardCharsets.UTF_8));
+    }
+
+    private static final class HttpResult {
+        private final int status;
+        private final String body;
+
+        private HttpResult(int status, String body) {
+            this.status = status;
+            this.body = body;
+        }
     }
 }

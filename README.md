@@ -134,3 +134,19 @@ El [roadmap de 20 semanas](docs/roadmap-20-semanas.md) relaciona cada hito con
 su entregable, evidencia verificable y estado actual. Los bloques pendientes se
 concentran en integrar la UI con el motor, ejecutar el benchmark A/B/C con
 resultados reales y preparar la demo final reproducible.
+
+## Ejecucion integrada
+
+`ForgeiaRunService` conecta en una unica ejecucion requisitos, planificacion,
+Context Compiler, Code Agent, aplicacion del parche, Maven/tests y Repair Agent.
+Cada `runId` conserva requisitos, trazas, contexto exacto, parche final,
+metricas de tokens y resultado bajo `.forgeia/runs/`.
+
+El servidor ofrece `GET /api/health` y una frontera inyectable
+`POST /api/runs`. El arranque por defecto mantiene esta ultima deshabilitada
+hasta configurar un `LlmClient`; de este modo no se simula un proveedor en
+produccion ni se exponen credenciales desde la interfaz.
+
+```powershell
+mvn -pl forgeia-orchestrator,forgeia-server -am test
+```

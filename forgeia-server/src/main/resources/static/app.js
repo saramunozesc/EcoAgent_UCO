@@ -23,4 +23,21 @@
       }
     });
   });
+
+  var engineStatus = document.getElementById("engine-status");
+  if (engineStatus && window.fetch) {
+    window.fetch("/api/health", { headers: { "Accept": "application/json" } })
+      .then(function (response) {
+        if (!response.ok) {
+          throw new Error("HTTP " + response.status);
+        }
+        return response.json();
+      })
+      .then(function (health) {
+        engineStatus.textContent = health.status === "UP" ? "Disponible" : "No disponible";
+      })
+      .catch(function () {
+        engineStatus.textContent = "No disponible";
+      });
+  }
 })();
