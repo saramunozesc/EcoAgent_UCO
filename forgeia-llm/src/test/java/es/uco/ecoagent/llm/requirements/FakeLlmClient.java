@@ -13,6 +13,7 @@ import java.util.Queue;
 public final class FakeLlmClient implements LlmClient {
     private final Queue<LlmResponse> responses = new ArrayDeque<LlmResponse>();
     private int calls;
+    private LlmRequest lastRequest;
 
     /**
      * Adds a response that will be returned by the next complete call.
@@ -27,6 +28,7 @@ public final class FakeLlmClient implements LlmClient {
      */
     public LlmResponse complete(LlmRequest request) {
         calls++;
+        lastRequest = request;
         return responses.remove();
     }
 
@@ -35,6 +37,13 @@ public final class FakeLlmClient implements LlmClient {
      */
     public int getCalls() {
         return calls;
+    }
+
+    /**
+     * Returns the most recent request for prompt-boundary assertions.
+     */
+    public LlmRequest getLastRequest() {
+        return lastRequest;
     }
 }
 

@@ -63,7 +63,7 @@ public final class AuditedTool<I, O> implements Tool<I, O> {
      */
     private ToolExecutionRecord record(I input, O output, String error, List<String> affectedFiles, long started) {
         return new ToolExecutionRecord(name(), InputSanitizer.sanitize(input), clock.millis() - started,
-                output == null ? "" : InputSanitizer.sanitize(output), error == null ? "" : error,
+                output == null ? "" : InputSanitizer.sanitize(output), InputSanitizer.sanitize(error),
                 affectedFiles, Instant.now(clock));
     }
 }

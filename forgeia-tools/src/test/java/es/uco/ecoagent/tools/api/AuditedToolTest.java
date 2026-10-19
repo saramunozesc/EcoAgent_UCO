@@ -52,16 +52,16 @@ public final class AuditedToolTest {
     @Test
     public void recordsFailedToolExecution() {
         InMemoryToolExecutionAuditSink sink = new InMemoryToolExecutionAuditSink();
-        AuditedTool<String, String> tool = new AuditedTool<String, String>(new FailingTool(), sink);
+        AuditedTool<String, String> tool = new AuditedTool<String, String>(new SecretFailingTool(), sink);
 
         try {
             tool.execute(new ToolExecutionContext(workspace()), "input");
         } catch (IllegalStateException expected) {
-            assertEquals("boom", expected.getMessage());
+            assertEquals("boom token=do-not-log", expected.getMessage());
         }
 
         assertEquals(1, sink.getRecords().size());
-        assertEquals("boom", sink.getRecords().get(0).getError());
+        assertEquals("boom token=***", sink.getRecords().get(0).getError());
     }
 
     /**
@@ -81,13 +81,13 @@ public final class AuditedToolTest {
         }
     }
 
-    private static final class FailingTool implements Tool<String, String> {
+    private static final class SecretFailingTool implements Tool<String, String> {
         public String name() {
             return "fail";
         }
 
         public String execute(ToolExecutionContext context, String input) {
-            throw new IllegalStateException("boom");
+            throw new IllegalStateException("boom token=do-not-log");
         }
     }
 }

@@ -482,3 +482,144 @@ Verificacion:
 mvn -pl forgeia-tools,forgeia-agents -am test
 ```
 
+# Seguridad y control del agente
+
+## 19.1 Workspace aislado
+
+`WorkspacePathPolicy` rechaza rutas vacias, absolutas y recorridos con `..`.
+Tambien resuelve el ancestro existente mas cercano para impedir que enlaces
+simbolicos o junctions redirijan una lectura o escritura fuera del workspace.
+
+## 19.2 Comandos y entorno
+
+`CommandAllowlist` valida la invocacion completa, no solo el ejecutable:
+
+- Git queda limitado a `diff`, aplicacion de parches por stdin y creacion de la
+  rama de snapshot usada al importar un proyecto.
+- Maven queda limitado a fases conocidas y a selectores y modulos con formato
+  seguro. No se permiten plugins arbitrarios ni propiedades adicionales.
+- `CommandRunner` utiliza `ProcessBuilder` sin shell, mantiene timeout y salida
+  acotada, y elimina del proceso hijo variables de entorno que puedan contener
+  tokens, contrasenas, secretos o claves.
+
+## 19.3 Auditoria sin secretos
+
+`InputSanitizer` oculta credenciales habituales en entradas, resultados y
+errores auditados. Cubre pares clave-valor, bearer tokens, tokens de GitHub,
+claves OpenAI, identificadores AWS y bloques de clave privada. El texto
+registrado continua estando limitado en longitud.
+
+## 19.4 Operaciones destructivas
+
+`DestructiveOperationPolicy` deniega todas las operaciones por defecto. La capa
+de orquestacion debe obtener confirmacion humana y crear una aprobacion para el
+identificador exacto de la operacion. Aprobar una operacion no autoriza otras.
+Los futuros tools de borrado, sobrescritura irreversible o actuacion fuera del
+workspace deben llamar a `ToolExecutionContext.requireDestructiveApproval`
+inmediatamente antes de ejecutar el efecto.
+
+## 19.5 Prompt injection en proyectos importados
+
+`UntrustedProjectContent` separa la politica del agente del texto recuperado.
+`CodeAgent` y `RepairAgent` incluyen una instruccion inmutable que obliga a
+tratar README, comentarios, diffs, errores y codigo como evidencia tecnica, y
+envuelven ese contenido entre delimitadores de datos no confiables. Una orden
+incluida en el repositorio no puede convertirse en instruccion del sistema.
+
+## 19.6 Criterio de salida
+
+El apartado queda verificable cuando:
+
+- ninguna ruta puede escapar lexicalmente ni mediante un enlace;
+- cada proceso coincide con una invocacion autorizada y recibe un entorno sin
+  credenciales;
+- los registros de tool calls no contienen secretos comunes;
+- una operacion destructiva sin aprobacion exacta falla de forma segura;
+- el contexto procedente del proyecto llega delimitado al LLM;
+- toda la suite Maven permanece en verde.
+
+Verificacion:
+
+```powershell
+mvn -pl forgeia-tools,forgeia-llm -am test
+mvn test
+```
+
+# Estrategia de pruebas
+
+## 20.1 Piramide del propio ForgeIA
+
+La suite se organiza en cinco niveles ejecutables con `mvn test`:
+
+| Nivel | Cobertura implementada |
+| --- | --- |
+| Unitarias | presupuestos y niveles de contexto, ranking, maquinas de estados, rutas, allowlist, parsers y sanitizacion |
+| Integracion | `MavenTool` compila un proyecto fixture real; `JavaAstIndexer` extrae sus simbolos; `ApplyPatchTool` aplica un diff real mediante Git |
+| Contract | `AgentOutputContractTest` acepta JSON valido y rechaza requisitos o parches que incumplen el esquema |
+| E2E | `ForgeiaEndToEndTest` recorre idea, requisitos, plan, propuesta de codigo, parche, build y tests |
+| Benchmark | `ContextStrategyBenchmarkTest` garantiza que cada caso se ejecuta con `FULL_CONTEXT`, `BASIC_RETRIEVAL` y `FORGEIA_CONTEXT_COMPILER` |
+
+Las pruebas que invocan Maven trabajan sobre copias temporales de los fixtures,
+por lo que no dejan artefactos de build dentro de `src/test/resources`.
+
+## 20.2 Fixtures
+
+Los fixtures versionados son:
+
+- `forgeia-analysis/src/test/resources/fixtures/task-crud`: proyecto Java
+  compilable con entidad `Task`, validacion de titulo, relacion `ManyToOne` con
+  `User`, repositorio, servicio CRUD y controlador con endpoints.
+- `forgeia-llm/src/test/resources/fixtures/priority-e2e`: proyecto Maven con un
+  error conocido porque falta `Priority`. El flujo E2E normaliza el fallo,
+  genera y aplica el parche que incorpora el enum y confirma que el test de
+  aceptacion termina en verde.
+
+Las anotaciones del fixture CRUD son locales y deliberadamente pequenas. Esto
+permite probar AST, grafo y Maven sin descargar Spring Boot o una base de datos.
+
+## 20.3 Tests del Context Compiler
+
+`ContextCompilerTest` verifica explicitamente que:
+
+- el simbolo o archivo objetivo aparece primero cuando es conocido;
+- `tokenCount` nunca supera `maxContextTokens`;
+- un archivo solo puede aparecer una vez en el `ContextSlice`;
+- la seleccion degrada `L3_FULL_FILE` -> `L2_SNIPPET` -> `L1_SUMMARY` ->
+  `L0_METADATA` al reducir el presupuesto;
+- dos compilaciones con la misma entrada producen las mismas rutas, niveles,
+  contenidos, tokens y puntuaciones.
+
+Para garantizar el ultimo punto, los empates de ranking se ordenan por la ruta
+normalizada del archivo en vez de depender del orden devuelto por el sistema de
+ficheros.
+
+## 20.4 Criterio de salida
+
+El apartado queda terminado cuando una compilacion limpia supera los cinco
+niveles de la piramide y el E2E demuestra tanto el fallo inicial como la
+reparacion posterior:
+
+```powershell
+mvn clean test
+```
+
+# Roadmap de 20 semanas
+
+## 21.1 Planificacion y seguimiento
+
+El calendario completo, sus dependencias, criterios de salida y el estado
+contrastado con la implementacion se mantienen en
+[`roadmap-20-semanas.md`](roadmap-20-semanas.md).
+
+El diagnostico actual situa como completados los hitos MVP-0 a MVP-5 y el modo
+de evolucion. La UI y la infraestructura experimental existen, pero aun deben
+conectarse a ejecuciones reales y producir resultados A/B/C reproducibles. Por
+ello, la continuacion prioritaria corresponde a las semanas 17 a 20, no a
+rehacer los hitos tecnicos anteriores.
+
+## 21.2 Criterio de salida
+
+El roadmap se considera operativo cuando cada franja de semanas dispone de un
+entregable, evidencia en el repositorio, comando o prueba de aceptacion y estado
+explicito. El estado solo cambia a `Completado` despues de validar esa evidencia.
+

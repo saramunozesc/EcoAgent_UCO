@@ -71,7 +71,11 @@ public final class ContextCompiler {
         }
         Collections.sort(candidates, new Comparator<ContextCandidate>() {
             public int compare(ContextCandidate left, ContextCandidate right) {
-                return Double.compare(right.getScore(), left.getScore());
+                int byScore = Double.compare(right.getScore(), left.getScore());
+                if (byScore != 0) {
+                    return byScore;
+                }
+                return left.getSummary().getPath().compareTo(right.getSummary().getPath());
             }
         });
         return candidates;

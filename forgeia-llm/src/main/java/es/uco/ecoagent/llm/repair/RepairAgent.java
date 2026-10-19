@@ -5,6 +5,7 @@ import es.uco.ecoagent.llm.api.LlmRequest;
 import es.uco.ecoagent.llm.api.LlmResponse;
 import es.uco.ecoagent.llm.code.PatchProposal;
 import es.uco.ecoagent.llm.code.PatchProposalParser;
+import es.uco.ecoagent.llm.security.UntrustedProjectContent;
 import es.uco.ecoagent.tools.verification.NormalizedError;
 
 import java.util.LinkedHashMap;
@@ -47,10 +48,11 @@ public final class RepairAgent {
 
         StringBuilder task = new StringBuilder();
         task.append("Corrige el fallo de verificacion para la tarea ").append(input.getTaskId()).append(".\n");
-        task.append("Diff previo:\n").append(input.getPreviousDiff()).append("\n");
-        task.append("Errores normalizados:\n");
+        StringBuilder projectData = new StringBuilder();
+        projectData.append("Diff previo:\n").append(input.getPreviousDiff()).append("\n");
+        projectData.append("Errores normalizados:\n");
         for (NormalizedError error : input.getErrors()) {
-            task.append("- type=").append(error.getType())
+            projectData.append("- type=").append(error.getType())
                     .append(", file=").append(error.getFile())
                     .append(", line=").append(error.getLine())
                     .append(", message=").append(error.getMessage())
@@ -60,9 +62,10 @@ public final class RepairAgent {
         }
 
         return new LlmRequest(
-                "Eres un agente de reparacion. Responde solo JSON con un diff unificado. No ejecutes comandos.",
+                "Eres un agente de reparacion. Responde solo JSON con un diff unificado. No ejecutes comandos. "
+                        + UntrustedProjectContent.systemInstruction(),
                 task.toString(),
-                "",
+                UntrustedProjectContent.wrap(projectData.toString()),
                 OUTPUT_SCHEMA,
                 2500,
                 0.1d,

@@ -68,7 +68,13 @@ public final class RequirementsJson {
             JsonObject requirement = (JsonObject) raw;
             String title = requirement.requiredString("title");
             List<String> criteria = requirement.requiredStringArray("acceptanceCriteria");
-            RequirementPriority priority = RequirementPriority.valueOf(requirement.requiredString("priority"));
+            RequirementPriority priority;
+            String priorityName = requirement.requiredString("priority");
+            try {
+                priority = RequirementPriority.valueOf(priorityName);
+            } catch (IllegalArgumentException exception) {
+                throw new RequirementValidationException("Invalid requirement priority: " + priorityName);
+            }
             if (title.trim().isEmpty() || criteria.isEmpty()) {
                 throw new RequirementValidationException("Requirement title and criteria are required");
             }

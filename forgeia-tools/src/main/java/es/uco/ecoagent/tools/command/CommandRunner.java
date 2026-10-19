@@ -2,13 +2,16 @@ package es.uco.ecoagent.tools.command;
 
 import es.uco.ecoagent.tools.api.ToolException;
 import es.uco.ecoagent.tools.security.CommandAllowlist;
+import es.uco.ecoagent.tools.security.CommandEnvironmentSanitizer;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -42,11 +45,12 @@ public final class CommandRunner {
         if (command == null || command.isEmpty()) {
             throw new ToolException("Command is required");
         }
-        allowlist.requireAllowed(command.get(0));
+        allowlist.requireAllowed(command);
 
-        ProcessBuilder processBuilder = new ProcessBuilder(command);
+        ProcessBuilder processBuilder = new ProcessBuilder(platformCommand(command));
         processBuilder.directory(workingDirectory.toFile());
         processBuilder.redirectErrorStream(true);
+        CommandEnvironmentSanitizer.removeSensitiveVariables(processBuilder.environment());
         try {
             Process process = processBuilder.start();
             if (input != null) {
@@ -77,6 +81,19 @@ public final class CommandRunner {
             Thread.currentThread().interrupt();
             throw new ToolException("Command interrupted: " + command, exception);
         }
+    }
+
+    /**
+     * Uses the Windows command wrapper Maven installs while keeping the
+     * logical allowlisted invocation platform independent.
+     */
+    private static List<String> platformCommand(List<String> command) {
+        List<String> resolved = new ArrayList<String>(command);
+        String operatingSystem = System.getProperty("os.name", "").toLowerCase(Locale.ROOT);
+        if (operatingSystem.contains("win") && "mvn".equals(resolved.get(0))) {
+            resolved.set(0, "mvn.cmd");
+        }
+        return resolved;
     }
 
     /**

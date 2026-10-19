@@ -103,3 +103,34 @@ mvn test
 ```powershell
 mvn -pl forgeia-tools,forgeia-agents -am test
 ```
+
+## Seguridad y control del agente
+
+```powershell
+mvn -pl forgeia-tools,forgeia-llm -am test
+```
+
+Las herramientas operan dentro de un workspace real, validan la invocacion
+completa de Git y Maven, eliminan credenciales del entorno y de la auditoria,
+y deniegan por defecto cualquier operacion destructiva que no tenga una
+aprobacion explicita. El contenido recuperado de proyectos se delimita como
+no confiable antes de enviarlo a un modelo.
+
+## Estrategia de pruebas
+
+```powershell
+mvn clean test
+```
+
+La suite combina pruebas unitarias, integracion con fixtures Maven, contratos
+JSON de agentes, un recorrido E2E desde la idea hasta el build en verde y la
+matriz benchmark A/B/C. Los proyectos de prueba versionados cubren CRUD,
+validacion, relacion entre entidades, endpoint y un error de compilacion
+reparable.
+
+## Roadmap
+
+El [roadmap de 20 semanas](docs/roadmap-20-semanas.md) relaciona cada hito con
+su entregable, evidencia verificable y estado actual. Los bloques pendientes se
+concentran en integrar la UI con el motor, ejecutar el benchmark A/B/C con
+resultados reales y preparar la demo final reproducible.

@@ -41,11 +41,35 @@ public final class ApplyPatchTool implements Tool<ApplyPatchInput, ApplyPatchRes
      * Applies the diff through stdin and reports files mentioned by the patch.
      */
     public ApplyPatchResult execute(ToolExecutionContext context, ApplyPatchInput input) {
+        List<String> modifiedFiles = parseModifiedFiles(input.getUnifiedDiff());
+        for (String path : modifiedFiles) {
+            context.getPathPolicy().resolveInsideWorkspace(path);
+        }
+        requireDeletionApprovals(context, input.getUnifiedDiff());
         CommandResult result = commandRunner.runWithInput(
                 context.getWorkspace(),
                 Arrays.asList("git", "apply", "--whitespace=nowarn", "-"),
                 input.getUnifiedDiff());
-        return new ApplyPatchResult(result.getExitCode(), parseModifiedFiles(input.getUnifiedDiff()), result.getOutput());
+        return new ApplyPatchResult(result.getExitCode(), modifiedFiles, result.getOutput());
+    }
+
+    /**
+     * Requires one exact approval for every file deletion represented by the
+     * patch. Other patch changes remain recoverable through the Git snapshot.
+     */
+    private static void requireDeletionApprovals(ToolExecutionContext context, String unifiedDiff) {
+        String previousPath = null;
+        String[] lines = unifiedDiff.split("\\r?\\n");
+        for (String line : lines) {
+            if (line.startsWith("--- a/")) {
+                previousPath = line.substring("--- a/".length());
+            } else if (line.startsWith("+++ /dev/null") && previousPath != null) {
+                context.requireDestructiveApproval("delete-file:" + previousPath, previousPath);
+                previousPath = null;
+            } else if (line.startsWith("+++ ")) {
+                previousPath = null;
+            }
+        }
     }
 
     /**

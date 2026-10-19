@@ -3,6 +3,7 @@ package es.uco.ecoagent.llm.code;
 import es.uco.ecoagent.llm.api.LlmClient;
 import es.uco.ecoagent.llm.api.LlmRequest;
 import es.uco.ecoagent.llm.api.LlmResponse;
+import es.uco.ecoagent.llm.security.UntrustedProjectContent;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -48,12 +49,12 @@ public final class CodeAgent {
                 + "Titulo: " + input.getTask().getTitle() + "\n"
                 + "Tipo: " + input.getTask().getType() + "\n"
                 + "Archivos objetivo probables: " + input.getTask().getTargetFiles() + "\n"
-                + "Arquitectura:\n" + input.getArchitectureInstructions() + "\n"
-                + "Contexto minimo:\n" + input.getContextSlice();
+                + "Arquitectura aprobada:\n" + input.getArchitectureInstructions();
         return new LlmRequest(
-                "Eres un agente de codigo. No escribas archivos. Responde solo JSON con un diff unificado.",
+                "Eres un agente de codigo. No escribas archivos. Responde solo JSON con un diff unificado. "
+                        + UntrustedProjectContent.systemInstruction(),
                 task,
-                input.getContextSlice(),
+                UntrustedProjectContent.wrap(input.getContextSlice()),
                 OUTPUT_SCHEMA,
                 input.getTask().getBudget().getMaxOutputTokens(),
                 0.1d,
